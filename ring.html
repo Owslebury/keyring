@@ -41,6 +41,9 @@
         // Add the torus to the scene
         scene.add(torus);
 
+        // Create an array to hold the cubes
+        const cubes = [];
+
         // Create a function to add cubes on the circle of the torus
         function addCubesOnCircle() {
             const cubeGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4); // Cube size
@@ -51,7 +54,6 @@
             // Calculate positions of cubes on the circle
             const numberOfCubes = 10; // Number of cubes to add
             for (let i = 0; i < numberOfCubes; i++) {
-				
                 const angle = ((Math.PI / (numberOfCubes - 1)) * i) + Math.PI  ; // Angle between cubes
                 const x = Math.cos(angle) * radius; // x position
                 const y = Math.sin(angle) * radius; // y position
@@ -63,7 +65,11 @@
                 // Calculate rotation to match torus
                 cube.lookAt(torus.position);
 
+                // Add cube to the scene
                 scene.add(cube);
+
+                // Add cube to the array
+                cubes.push(cube);
             }
         }
 
@@ -77,6 +83,29 @@
 
         // Render the scene
         renderer.render(scene, camera);
+
+        // Add event listener for mouse clicks
+        document.addEventListener('click', onDocumentClick, false);
+
+        // Function to handle mouse clicks
+        function onDocumentClick(event) {
+            // Calculate mouse position in normalized device coordinates
+            const mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            // Raycast from the camera to the mouse position
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+
+            // Check for intersections with cubes
+            const intersects = raycaster.intersectObjects(cubes);
+
+            if (intersects.length > 0) {
+                // A cube is clicked
+                console.log('Cube clicked!');
+            }
+        }
 
     </script>
 </body>
