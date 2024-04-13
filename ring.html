@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Ring with Rotated Cubes</title>
+    <title>3D Ring with Rotated Spheres</title>
     <style>
         body {
             margin: 0;
@@ -41,40 +41,40 @@
         // Add the torus to the scene
         scene.add(torus);
 
-        // Create an array to hold the cubes
-        const cubes = [];
+        // Create an array to hold the spheres
+        const spheres = [];
 
-        // Create a function to add cubes on the circle of the torus
-        function addCubesOnCircle() {
-            const cubeGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4); // Cube size
-            const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xd9ff00 }); // Red color for cubes
+        // Create a function to add spheres on the circle of the torus
+        function addSpheresOnCircle() {
+            const sphereGeometry = new THREE.SphereGeometry(0.2, 32, 32); // Sphere size
+            const sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xd9ff00 }); // Red color for spheres
 
             const radius = 2; // Radius of the torus
 
-            // Calculate positions of cubes on the circle
-            const numberOfCubes = 20; // Number of cubes to add
-            for (let i = 0; i < numberOfCubes; i++) {
-                const angle = ((Math.PI / (numberOfCubes - 1)) * i) + Math.PI  ; // Angle between cubes
+            // Calculate positions of spheres on the circle
+            const numberOfSpheres = 20; // Number of spheres to add
+            for (let i = 0; i < numberOfSpheres; i++) {
+                const angle = ((Math.PI / (numberOfSpheres - 1)) * i) + Math.PI; // Angle between spheres
                 const x = Math.cos(angle) * radius; // x position
                 const y = Math.sin(angle) * radius; // y position
 
-                // Create cube and set position
-                const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-                cube.position.set(x, y, 0);
+                // Create sphere and set position
+                const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+                sphere.position.set(x, y, 0);
 
                 // Calculate rotation to match torus
-                cube.lookAt(torus.position);
+                sphere.lookAt(torus.position);
 
-                // Add cube to the scene
-                scene.add(cube);
+                // Add sphere to the scene
+                scene.add(sphere);
 
-                // Add cube to the array
-                cubes.push(cube);
+                // Add sphere to the array
+                spheres.push(sphere);
             }
         }
 
-        // Call the function to add cubes on the circle of the torus
-        addCubesOnCircle();
+        // Call the function to add spheres on the circle of the torus
+        addSpheresOnCircle();
 
         // Add lighting with adjustable brightness
         const light = new THREE.PointLight(0xffffff, 1); // Intensity is initially set to 1
@@ -95,55 +95,54 @@
             const raycaster = new THREE.Raycaster();
             raycaster.setFromCamera(mouse, camera);
 
-            // Check for intersections with cubes
-            const intersects = raycaster.intersectObjects(cubes);
+            // Check for intersections with spheres
+            const intersects = raycaster.intersectObjects(spheres);
 
             if (intersects.length > 0) {
-                // A cube is clicked
-                const selectedCube = intersects[0].object;
+                // A sphere is clicked
+                const selectedSphere = intersects[0].object;
 
-                // Get the index of the selected cube
-                const selectedIndex = cubes.indexOf(selectedCube);
+                // Get the index of the selected sphere
+                const selectedIndex = spheres.indexOf(selectedSphere);
 
-                // Get the total number of cubes
-                const totalCubes = cubes.length;
+                // Get the total number of spheres
+                const totalSpheres = spheres.length;
 
-                // Calculate the index of the leftmost and rightmost cubes
+                // Calculate the index of the leftmost and rightmost spheres
                 const leftmostIndex = 0;
-                const rightmostIndex = totalCubes - 1;
+                const rightmostIndex = totalSpheres - 1;
 
-                // Check if the clicked cube is the leftmost or rightmost
+                // Check if the clicked sphere is the leftmost or rightmost
                 if (selectedIndex === leftmostIndex || selectedIndex === rightmostIndex) {
-				
-                    // Calculate the angle to move the cube around the torus
+                    // Calculate the angle to move the sphere around the torus
                     const angleIncrement = Math.PI;
                     const targetAngle = selectedIndex === leftmostIndex ? -angleIncrement : angleIncrement;
-                    // Animate the cube to move around the torus
+                    // Animate the sphere to move around the torus
                     const duration = 2000; // Duration of the animation in milliseconds
 
                     // Animation function
-                    function animateCube() {
+                    function animateSphere() {
                         const now = Date.now();
                         const elapsedTime = now - startTime;
 
                         if (elapsedTime < duration) {
-    const t = elapsedTime / duration;
-    const currentAngle = targetAngle * t;
-    let newPosition = new THREE.Vector3(Math.cos(currentAngle) * 2, Math.sin(currentAngle) * 2, 0);
-    if (selectedIndex === leftmostIndex) {
-        newPosition = new THREE.Vector3(Math.cos(currentAngle + Math.PI) * 2, Math.sin(currentAngle + Math.PI) * 2, 0);
-    }
-    selectedCube.position.copy(newPosition);
-    requestAnimationFrame(animateCube);
+                            const t = elapsedTime / duration;
+                            const currentAngle = targetAngle * t;
+                            let newPosition = new THREE.Vector3(Math.cos(currentAngle) * 2, Math.sin(currentAngle) * 2, 0);
+                            if (selectedIndex === leftmostIndex) {
+                                newPosition = new THREE.Vector3(Math.cos(currentAngle + Math.PI) * 2, Math.sin(currentAngle + Math.PI) * 2, 0);
+                            }
+                            selectedSphere.position.copy(newPosition);
+                            requestAnimationFrame(animateSphere);
                         } else {
-                            selectedCube.position.set(Math.cos(targetAngle) * 2, Math.sin(targetAngle) * 2, 0);
+                            selectedSphere.position.set(Math.cos(targetAngle) * 2, Math.sin(targetAngle) * 2, 0);
                         }
 
                         renderer.render(scene, camera);
                     }
 
                     const startTime = Date.now(); // Start time of the animation
-                    animateCube();
+                    animateSphere();
                 }
             }
         }
