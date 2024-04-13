@@ -84,9 +84,6 @@
         // Render the scene
         renderer.render(scene, camera);
 
-        // Add event listener for mouse clicks
-        document.addEventListener('click', onDocumentClick, false);
-
         // Function to handle mouse clicks
         function onDocumentClick(event) {
             // Calculate mouse position in normalized device coordinates
@@ -103,9 +100,53 @@
 
             if (intersects.length > 0) {
                 // A cube is clicked
-                console.log('Cube clicked!');
+                const selectedCube = intersects[0].object;
+
+                // Get the index of the selected cube
+                const selectedIndex = cubes.indexOf(selectedCube);
+
+                // Get the total number of cubes
+                const totalCubes = cubes.length;
+
+                // Calculate the index of the leftmost and rightmost cubes
+                const leftmostIndex = 0;
+                const rightmostIndex = totalCubes - 1;
+
+                // Check if the clicked cube is the leftmost or rightmost
+                if (selectedIndex === leftmostIndex || selectedIndex === rightmostIndex) {
+                    // Calculate the angle to move the cube around the torus
+                    const angleIncrement = Math.PI * 2 / totalCubes;
+                    const targetAngle = selectedIndex === leftmostIndex ? angleIncrement : -angleIncrement;
+
+                    // Animate the cube to move around the torus
+                    const duration = 2000; // Duration of the animation in milliseconds
+
+                    // Animation function
+                    function animateCube() {
+                        const now = Date.now();
+                        const elapsedTime = now - startTime;
+
+                        if (elapsedTime < duration) {
+                            const t = elapsedTime / duration;
+                            const currentAngle = targetAngle * t;
+                            const newPosition = new THREE.Vector3(Math.cos(currentAngle) * 2, Math.sin(currentAngle) * 2, 0);
+                            selectedCube.position.copy(newPosition);
+                            requestAnimationFrame(animateCube);
+                        } else {
+                            selectedCube.position.set(Math.cos(targetAngle) * 2, Math.sin(targetAngle) * 2, 0);
+                        }
+
+                        renderer.render(scene, camera);
+                    }
+
+                    const startTime = Date.now(); // Start time of the animation
+                    animateCube();
+                }
             }
         }
+
+        // Add event listener for mouse clicks
+        document.addEventListener('click', onDocumentClick, false);
 
     </script>
 </body>
