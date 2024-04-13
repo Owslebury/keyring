@@ -52,7 +52,7 @@
             const radius = 2; // Radius of the torus
 
             // Calculate positions of cubes on the circle
-            const numberOfCubes = 10; // Number of cubes to add
+            const numberOfCubes = 20; // Number of cubes to add
             for (let i = 0; i < numberOfCubes; i++) {
                 const angle = ((Math.PI / (numberOfCubes - 1)) * i) + Math.PI  ; // Angle between cubes
                 const x = Math.cos(angle) * radius; // x position
@@ -114,10 +114,10 @@
 
                 // Check if the clicked cube is the leftmost or rightmost
                 if (selectedIndex === leftmostIndex || selectedIndex === rightmostIndex) {
+				
                     // Calculate the angle to move the cube around the torus
                     const angleIncrement = Math.PI;
                     const targetAngle = selectedIndex === leftmostIndex ? -angleIncrement : angleIncrement;
-
                     // Animate the cube to move around the torus
                     const duration = 2000; // Duration of the animation in milliseconds
 
@@ -127,11 +127,14 @@
                         const elapsedTime = now - startTime;
 
                         if (elapsedTime < duration) {
-                            const t = elapsedTime / duration;
-                            const currentAngle = targetAngle * t;
-                            const newPosition = new THREE.Vector3(Math.cos(currentAngle) * 2, Math.sin(currentAngle) * 2, 0);
-                            selectedCube.position.copy(newPosition);
-                            requestAnimationFrame(animateCube);
+    const t = elapsedTime / duration;
+    const currentAngle = targetAngle * t;
+    let newPosition = new THREE.Vector3(Math.cos(currentAngle) * 2, Math.sin(currentAngle) * 2, 0);
+    if (selectedIndex === leftmostIndex) {
+        newPosition = new THREE.Vector3(Math.cos(currentAngle + Math.PI) * 2, Math.sin(currentAngle + Math.PI) * 2, 0);
+    }
+    selectedCube.position.copy(newPosition);
+    requestAnimationFrame(animateCube);
                         } else {
                             selectedCube.position.set(Math.cos(targetAngle) * 2, Math.sin(targetAngle) * 2, 0);
                         }
