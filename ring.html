@@ -115,8 +115,8 @@
                 // Check if the clicked cube is the leftmost or rightmost
                 if (selectedIndex === leftmostIndex || selectedIndex === rightmostIndex) {
                     // Calculate the angle to move the cube around the torus
-                    const angleIncrement = Math.PI * 2 / totalCubes;
-                    const targetAngle = selectedIndex === leftmostIndex ? angleIncrement : -angleIncrement;
+                    const angleIncrement = Math.PI;
+                    const targetAngle = selectedIndex === leftmostIndex ? -angleIncrement : angleIncrement;
 
                     // Animate the cube to move around the torus
                     const duration = 2000; // Duration of the animation in milliseconds
