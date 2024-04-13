@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Ring</title>
+    <title>3D Ring with Rotated Cubes</title>
     <style>
         body {
             margin: 0;
@@ -35,11 +35,39 @@
         // Create a standard material for shading
         const material = new THREE.MeshStandardMaterial({ color: 0xA8A8A8 });
 
-        // Create a mesh with the geometry and material
+        // Create a mesh with the geometry and material for the torus (ring)
         const torus = new THREE.Mesh(geometry, material);
 
         // Add the torus to the scene
         scene.add(torus);
+
+        // Create a function to add cubes on the circle of the torus
+        function addCubesOnCircle() {
+            const cubeGeometry = new THREE.BoxGeometry(1, 1, 1); // Cube size
+            const cubeMaterial = new THREE.MeshStandardMaterial({ color: 0xFF0000 }); // Red color for cubes
+
+            const radius = 2; // Radius of the torus
+
+            // Calculate positions of cubes on the circle
+            const numberOfCubes = 10; // Number of cubes to add
+            for (let i = 0; i < numberOfCubes; i++) {
+                const angle = (Math.PI * 2 / numberOfCubes) * i; // Angle between cubes
+                const x = Math.cos(angle) * radius; // x position
+                const y = Math.sin(angle) * radius; // y position
+
+                // Create cube and set position
+                const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+                cube.position.set(x, y, 0);
+
+                // Calculate rotation to match torus
+                cube.lookAt(torus.position);
+
+                scene.add(cube);
+            }
+        }
+
+        // Call the function to add cubes on the circle of the torus
+        addCubesOnCircle();
 
         // Add lighting with adjustable brightness
         const light = new THREE.PointLight(0xffffff, 1); // Intensity is initially set to 1
