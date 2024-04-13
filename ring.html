@@ -51,7 +51,8 @@
             // Calculate positions of cubes on the circle
             const numberOfCubes = 10; // Number of cubes to add
             for (let i = 0; i < numberOfCubes; i++) {
-                const angle = (Math.PI * 2 / numberOfCubes) * i; // Angle between cubes
+				
+                const angle = ((Math.PI / (numberOfCubes - 1)) * i) + Math.PI  ; // Angle between cubes
                 const x = Math.cos(angle) * radius; // x position
                 const y = Math.sin(angle) * radius; // y position
 
